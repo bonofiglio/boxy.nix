@@ -1,0 +1,212 @@
+(version 1)
+(deny default)
+(import "dyld-support.sb")
+
+(allow process-exec)
+(allow process-fork)
+(allow signal (target same-sandbox))
+(allow user-preference-read)
+(allow process-info* (target same-sandbox))
+
+(allow file-read* file-write-data
+  (require-all
+    (path "/dev/null")
+    (vnode-type CHARACTER-DEVICE)))
+
+(allow file-read* file-test-existence
+  (literal "/")
+  (literal "/dev/autofs_nowait")
+  (literal "/dev/random")
+  (literal "/dev/urandom")
+  (literal "/private/etc/master.passwd")
+  (literal "/private/etc/passwd")
+  (literal "/private/etc/protocols")
+  (literal "/private/etc/services")
+  (literal "/private/var/db/DarwinDirectory/local/recordStore.data")
+  (subpath "/private/var/db/timezone"))
+
+(allow file-read* file-test-existence file-write-data
+  (literal "/dev/zero"))
+
+(allow file-read* file-test-existence
+  (subpath "/dev/fd"))
+
+(allow sysctl-read
+  (sysctl-name "hw.activecpu")
+  (sysctl-name "hw.busfrequency_compat")
+  (sysctl-name "hw.byteorder")
+  (sysctl-name "hw.cacheconfig")
+  (sysctl-name "hw.cachelinesize_compat")
+  (sysctl-name "hw.cpufamily")
+  (sysctl-name "hw.cpufrequency_compat")
+  (sysctl-name "hw.cputype")
+  (sysctl-name "hw.l1dcachesize_compat")
+  (sysctl-name "hw.l1icachesize_compat")
+  (sysctl-name "hw.l2cachesize_compat")
+  (sysctl-name "hw.l3cachesize_compat")
+  (sysctl-name "hw.logicalcpu_max")
+  (sysctl-name "hw.machine")
+  (sysctl-name "hw.memsize")
+  (sysctl-name "hw.ncpu")
+  (sysctl-name "hw.nperflevels")
+  (sysctl-name-prefix "hw.optional.arm.")
+  (sysctl-name-prefix "hw.optional.armv8_")
+  (sysctl-name "hw.packages")
+  (sysctl-name "hw.pagesize_compat")
+  (sysctl-name "hw.pagesize")
+  (sysctl-name "hw.physicalcpu_max")
+  (sysctl-name "hw.tbfrequency_compat")
+  (sysctl-name "hw.vectorunit")
+  (sysctl-name "kern.hostname")
+  (sysctl-name "kern.maxfilesperproc")
+  (sysctl-name "kern.maxproc")
+  (sysctl-name "kern.osproductversion")
+  (sysctl-name "kern.osrelease")
+  (sysctl-name "kern.ostype")
+  (sysctl-name "kern.osvariant_status")
+  (sysctl-name "kern.osversion")
+  (sysctl-name "kern.secure_kernel")
+  (sysctl-name "kern.usrstack64")
+  (sysctl-name "kern.version")
+  (sysctl-name "sysctl.proc_cputype")
+  (sysctl-name "vm.loadavg")
+  (sysctl-name-prefix "hw.perflevel")
+  (sysctl-name-prefix "kern.proc.pgrp.")
+  (sysctl-name-prefix "kern.proc.pid.")
+  (sysctl-name-prefix "net.routetable."))
+
+(allow iokit-open
+  (iokit-registry-entry-class "RootDomainUserClient"))
+
+(allow mach-lookup
+  (global-name "com.apple.FSEvents")
+  (global-name "com.apple.system.opendirectoryd.libinfo")
+  (global-name "com.apple.PowerManagement.control")
+  (global-name "com.apple.SecurityServer")
+  (global-name "com.apple.ocspd")
+  (global-name "com.apple.trustd.agent")
+  (global-name "com.apple.bsd.dirhelper")
+  (global-name "com.apple.system.opendirectoryd.membership")
+  (global-name "com.apple.system.notification_center"))
+
+(allow ipc-posix-sem)
+
+(allow network-outbound
+  (remote tcp)
+  (literal "/private/var/run/mDNSResponder"))
+(allow network-inbound)
+(allow system-socket)
+
+(allow file-read-metadata file-test-existence
+  (subpath "/"))
+
+(allow file*
+  (literal "/dev/tty")
+  (literal (param "TTY_DEVICE")))
+
+(allow file-read* file-map-executable file-test-existence process-exec*
+  (subpath "/bin")
+  (subpath "/sbin")
+  (subpath "/usr/bin")
+  (subpath "/usr/lib")
+  (subpath "/usr/libexec")
+  (subpath "/usr/sbin")
+  (subpath "/usr/share")
+  (subpath "/Library/Apple")
+  (subpath "/Library/Developer")
+  (subpath "/Library/Filesystems/NetFSPlugins")
+  (subpath "/Library/Preferences/Logging")
+  (subpath "/Applications/Xcode.app/Contents/Developer")
+  (subpath "/System")
+  (subpath "/usr/local/Cellar")
+  (subpath "/usr/local/bin")
+  (subpath "/usr/local/opt")
+  (subpath "/opt/homebrew/Cellar")
+  (subpath "/opt/homebrew/bin")
+  (subpath "/opt/homebrew/opt")
+  (subpath "/nix/store"))
+
+(allow file-read* file-test-existence
+  (subpath "/tmp")
+  (subpath "/private/tmp")
+  (subpath "/etc")
+  (subpath "/private/etc")
+  (subpath "/usr/local/etc")
+  (subpath "/usr/local/share")
+  (subpath "/opt/homebrew/etc")
+  (subpath "/opt/homebrew/share")
+  (subpath (param "GIT_XDG_CONFIG"))
+  (literal (param "HOME_PROFILE"))
+  (literal (param "HOME_BASH_PROFILE"))
+  (literal (param "HOME_BASHRC"))
+  (literal (param "HOME_ZPROFILE"))
+  (literal (param "HOME_ZSHENV"))
+  (literal (param "HOME_ZSHRC")))
+
+(allow file-read* file-write* file-map-executable file-test-existence process-exec*
+  (subpath (param "WORKSPACE")))
+
+(allow file-read* file-write* file-test-existence
+  (subpath "/tmp")
+  (subpath "/private/tmp")
+  (subpath (param "CLAUDE_HOME"))
+  (literal (param "CLAUDE_JSON"))
+  (subpath (param "CLAUDE_XDG_CONFIG"))
+  (subpath (param "CLAUDE_XDG_CACHE"))
+  (subpath (param "CLAUDE_XDG_DATA"))
+  (subpath (param "CLAUDE_XDG_STATE"))
+  (subpath (param "CLAUDE_DARWIN_APP_SUPPORT"))
+  (subpath (param "CLAUDE_DARWIN_CACHE"))
+  (subpath (param "CLAUDE_DARWIN_LOGS"))
+  (subpath (param "OPENCODE_XDG_CONFIG"))
+  (subpath (param "OPENCODE_XDG_CACHE"))
+  (subpath (param "OPENCODE_XDG_DATA"))
+  (subpath (param "OPENCODE_XDG_STATE"))
+  (subpath (param "OPENCODE_DARWIN_APP_SUPPORT"))
+  (subpath (param "OPENCODE_DARWIN_CACHE"))
+  (subpath (param "OPENCODE_DARWIN_LOGS")))
+
+(allow file-read* file-map-executable file-test-existence process-exec*
+  (subpath (param "RUSTUP_HOME"))
+  (subpath (param "CARGO_HOME"))
+  (subpath (param "PNPM_HOME"))
+  (subpath (param "YARN_HOME")))
+
+(allow file-read* file-write* file-map-executable file-test-existence process-exec*
+  (subpath (param "NPM_CACHE"))
+  (subpath (param "PNPM_STORE"))
+  (subpath (param "PNPM_CACHE"))
+  (subpath (param "PNPM_STATE"))
+  (subpath (param "YARN_BERRY"))
+  (subpath (param "YARN_CACHE"))
+  (subpath (param "YARN_CACHE_XDG"))
+  (subpath (param "COREPACK_CACHE"))
+  (subpath (param "COREPACK_CACHE_DARWIN")))
+
+(allow file-read* file-write* file-test-existence
+  (subpath (param "CARGO_REGISTRY"))
+  (subpath (param "CARGO_GIT"))
+  (literal (param "CARGO_PACKAGE_CACHE"))
+  (literal (param "CARGO_HOME"))
+  (literal (param "YARN_HOME")))
+
+(allow file-read* file-test-existence
+  (subpath (param "PNPM_CONFIG"))
+  (subpath (param "YARN_CONFIG"))
+  (literal (param "NPM_RC"))
+  (literal (param "YARN_RC"))
+  (literal (param "YARN_RC_YML")))
+
+(allow file-read* file-write* file-test-existence
+  (subpath (param "HOME_KEYCHAINS")))
+(allow file-read* file-test-existence
+  (literal "/Library/Keychains/System.keychain")
+  (subpath "/System/Library/Keychains"))
+
+(allow file-read* file-write* file-test-existence
+  (subpath "/private/var/db/mds"))
+(allow ipc-posix-shm*)
+
+(allow file-read* file-write* file-test-existence
+  (subpath (param "DARWIN_USER_CACHE"))
+  (subpath (param "DARWIN_USER_TEMP")))
