@@ -9,17 +9,17 @@ The exported `mkSandboxedAgent` helper creates a shell application that runs a c
 ```nix
 {
   nixpkgs.url = "github:nixos/nixpkgs?ref=nixpkgs-unstable";
-  inputs.sandboxed-agents.url = "github:bonofiglio/sandboxed-agents";
-  inputs.sandboxed-agents.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.boxy.url = "github:bonofiglio/boxy.nix";
+  inputs.boxy.inputs.nixpkgs.follows = "nixpkgs";
 
-  outputs = { nixpkgs, sandboxed-agents, ... }:
+  outputs = { nixpkgs, boxy, ... }:
     let
       system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       packages.${system}.sandboxed-opencode =
-        sandboxed-agents.lib.${system}.mkSandboxedAgent {
-          name = "sandboxed-opencode"; # Set `opencode` here instead if you wanna keep using the muscle memory
+        boxy.lib.${system}.mkSandboxedAgent {
+          name = "sandboxed-opencode"; # Set `opencode` here instead if you wanna keep using your muscle memory
           program = "${pkgs.opencode}/bin/opencode";
         };
     };
